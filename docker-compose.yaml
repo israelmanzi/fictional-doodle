@@ -1,0 +1,12 @@
+version: '3'
+services:
+  htp-service:
+    build: ./
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./src:/app/src
+      - /app/node_modules
+      - ./package.json:/app/package.json
+    env_file:
+      - .env
