@@ -1,0 +1,49 @@
+{
+  "name": "HealthTrackPro",
+  "version": "1.0.0",
+  "description": "Y3 Project-01: HealthTrack Pro Plus",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest -c jest.unit.json --coverage",
+    "test:watch": "jest -c jest.unit.json  --watchAll",
+    "build": "tsc",
+    "start:dev": "tsnd --respawn src/index.ts",
+    "start": "node build/index.js",
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --ext .ts --fix"
+  },
+  "keywords": [
+    "HealthTrackPro",
+    "Node.js",
+    "Typescript",
+    "SQLite",
+    "Embedded Systems Project"
+  ],
+  "author": "Israel MANZI",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/israelmanzi/HealthTrackPro"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.19",
+    "@types/uuid": "^9.0.5",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.0.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0",
+    "zod": "^3.22.4"
+  }
+}
