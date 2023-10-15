@@ -1,5 +1,6 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
+import indexRouter from './routes/index.route';
 
 const app: Application = express()
   .use(
@@ -12,10 +13,7 @@ const app: Application = express()
     }),
   )
   .use(express.json())
-  .get('/', (req: Request, res: Response) => {
-    res.json({
-      message: 'HealthTrack Pro Plus API Service',
-    });
-  });
+  .use(express.urlencoded({ extended: true }))
+  .use('/api/v1', indexRouter);
 
 export default app;
