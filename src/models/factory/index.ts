@@ -31,12 +31,14 @@ export default class FPatient {
   private body_temperature: number;
   private patient_name: string;
   private patient_id: string;
+  private patient_frequent_sickness?: string | null;
 
-  constructor(heart_rate: number, body_temperature: number, patient_name: string) {
+  constructor({ heart_rate, body_temperature, patient_name, patient_frequent_sickness }: TPayload) {
     this.heart_rate = new Validator(heart_rate, factory_schema.heart_rate).getValue();
     this.body_temperature = new Validator(body_temperature, factory_schema.body_temperature).getValue();
     this.patient_name = new Validator(patient_name, factory_schema.patient_name).getValue();
     this.patient_id = v4();
+    this.patient_frequent_sickness && (this.patient_frequent_sickness = new Validator(patient_frequent_sickness, factory_schema.patient_name).getValue());
   }
 
   public getData(): TPayload {

@@ -58,23 +58,21 @@ export default (callback: (req: Request, res: Response) => Promise<void>) => asy
     await callback(req, res);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    // eslint-disable-next-line no-console
-    console.error(error);
     switch (error.constructor) {
       case InvalidElementError:
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
         break;
       case ElementNotFoundError:
-        res.status(404).json({ error: error.message });
+        res.status(404).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
         break;
       case InvalidPayloadError:
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
         break;
       case UnauthorizedError:
-        res.status(401).json({ error: error.message });
+        res.status(401).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
         break;
       default:
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
         break;
     }
   }

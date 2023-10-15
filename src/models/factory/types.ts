@@ -1,7 +1,7 @@
-export type TPayload = {
+export interface TPayload {
   heart_rate: number;
   body_temperature: number;
   patient_name: string;
   patient_id?: string;
-  patient_frequent_sickness?: string;
-};
+  patient_frequent_sickness?: string | null;
+}
