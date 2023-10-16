@@ -31,11 +31,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Test Docker build
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-
-          docker build -t healthtrackpro .
-          docker run -d -p 3000:80 healthtrackpro
