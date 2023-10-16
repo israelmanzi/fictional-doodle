@@ -4,10 +4,11 @@ import { z } from 'zod';
 import { TPayload } from './types';
 import { InvalidElementError } from '../../utils/res';
 
-const factory_schema = {
+export const factory_schema = {
   heart_rate: z.number().min(0).max(200),
   body_temperature: z.number().min(32).max(40),
   patient_name: z.string().min(3).max(50),
+  patient_frequent_sickness: z.string().min(3).max(50).optional(),
 };
 
 export class Validator<T> {
@@ -38,7 +39,8 @@ export default class FPatient {
     this.body_temperature = new Validator(body_temperature, factory_schema.body_temperature).getValue();
     this.patient_name = new Validator(patient_name, factory_schema.patient_name).getValue();
     this.patient_id = v4();
-    this.patient_frequent_sickness && (this.patient_frequent_sickness = new Validator(patient_frequent_sickness, factory_schema.patient_name).getValue());
+    patient_frequent_sickness &&
+      (this.patient_frequent_sickness = new Validator(patient_frequent_sickness, factory_schema.patient_frequent_sickness).getValue());
   }
 
   public getData(): TPayload {
@@ -47,6 +49,7 @@ export default class FPatient {
       body_temperature: this.body_temperature,
       patient_name: this.patient_name,
       patient_id: this.patient_id,
+      patient_frequent_sickness: this.patient_frequent_sickness || null,
     };
   }
 }
