@@ -14,7 +14,11 @@ export default class PatientService {
   }
 
   async getPatients(): Promise<TPayload[]> {
-    const patients = (await this.prismaService.patient.findMany()) as TPayload[];
+    const patients = (await this.prismaService.patient.findMany({
+      orderBy: {
+        updated_at: 'desc',
+      },
+    })) as TPayload[];
 
     if (!patients || patients.length === 0) throw new ElementNotFoundError('No patients found!');
 
