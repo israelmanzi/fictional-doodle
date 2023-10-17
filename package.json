@@ -11,7 +11,7 @@
     "lint-fix": "eslint . --ext .ts --fix",
     "test": "jest -c jest.unit.json --coverage",
     "test:watch": "jest -c jest.unit.json  --watchAll",
-    "prisma-generate": "prisma generate"
+    "prisma-init": "prisma generate && prisma migrate dev --name init --preview-feature && prisma db push"
   },
   "keywords": [
     "HealthTrackPro",
