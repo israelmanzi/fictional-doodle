@@ -4,12 +4,9 @@ import PatientService from '../services/patient.service';
 
 const patientService = new PatientService();
 
-const defController = {
+const patientController = {
   default: async (_req: Request, res: Response) => {
-    // new TResponse(200, 'HealthTrack Pro Plus API Service').send(res);
-    res.status(200).json({
-      message: 'HealthTrack Pro Plus API Service',
-    });
+    new TResponse(200, 'HealthTrack Pro Plus API Service').send(res);
   },
 
   getPatients: async (_req: Request, res: Response) => {
@@ -36,6 +33,18 @@ const defController = {
     const patient = await patientService.deletePatient(id);
     new TResponse(200, patient).send(res);
   },
+
+  getPatientWithRecords: async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const patient = await patientService.getPatientWithRecords(id);
+    new TResponse(200, patient).send(res);
+  },
+
+  newRecordForPatient: async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const patient = await patientService.recordForPatient(id, req.body);
+    new TResponse(200, patient).send(res);
+  },
 };
 
-export default defController;
+export default patientController;

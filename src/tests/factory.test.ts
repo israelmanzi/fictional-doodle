@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import FPatient from '../models/factory';
-import { TPayload } from '../models/factory/types';
+import { TPayload } from '../models/types';
 import { InvalidElementError, ElementNotFoundError, ForbiddenError, InvalidPayloadError, UnauthorizedError, TResponse } from '../utils/res';
 
 export const sample_data = [

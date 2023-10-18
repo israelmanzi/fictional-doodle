@@ -11,12 +11,22 @@ datasource db {
 }
 
 model Patient {
-  id                        Int     @id @default(autoincrement())
-  patient_id                String  @unique
-  patient_name              String
+  id           Int      @id @default(autoincrement())
+  patient_id   String   @unique
+  patient_name String
+  records      Record[]
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+}
+
+model Record {
+  id                        Int      @id @default(autoincrement())
+  record_id                 String   @unique
   heart_rate                Float
   body_temperature          Float
   patient_frequent_sickness String?
+  Patient                   Patient? @relation(fields: [patient_id], references: [patient_id])
+  patient_id                String
   created_at                DateTime @default(now())
   updated_at                DateTime @updatedAt
 }

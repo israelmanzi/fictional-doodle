@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v4 } from 'uuid';
 import { z } from 'zod';
-import { TPayload } from './types';
+import { TPayload, TRecord } from '../types';
 import { InvalidElementError } from '../../utils/res';
 
-export const factory_schema = {
-  heart_rate: z.number().min(0).max(200),
-  body_temperature: z.number().min(32).max(40),
+export const patient_schema = {
   patient_name: z.string().min(3).max(50),
-  patient_frequent_sickness: z.string().min(3).max(50).optional(),
+};
+
+export const record_schema = {
+  heart_rate: z.number().min(0).max(200),
+  body_temperature: z.number().min(0).max(50),
+  patient_frequent_sickness: z.string().min(3).max(50),
 };
 
 export class Validator<T> {
@@ -27,29 +30,49 @@ export class Validator<T> {
   }
 }
 
-export default class FPatient {
+export class FRecord {
   private heart_rate: number;
   private body_temperature: number;
+  private patient_frequent_sickness?: string | null;
+  private record_id: string;
+  private patient_id: string;
+
+  constructor({ heart_rate, body_temperature, patient_frequent_sickness, patient_id }: TRecord) {
+    this.heart_rate = new Validator(heart_rate, record_schema.heart_rate).getValue();
+    this.body_temperature = new Validator(body_temperature, record_schema.body_temperature).getValue();
+    patient_frequent_sickness &&
+      (this.patient_frequent_sickness = new Validator(patient_frequent_sickness, record_schema.patient_frequent_sickness).getValue());
+    this.record_id = v4();
+    this.patient_id = patient_id;
+  }
+
+  public getData(): TRecord {
+    return {
+      heart_rate: this.heart_rate,
+      body_temperature: this.body_temperature,
+      patient_frequent_sickness: this.patient_frequent_sickness || null,
+      record_id: this.record_id,
+      patient_id: this.patient_id,
+    };
+  }
+}
+
+export default class FPatient {
   private patient_name: string;
   private patient_id: string;
-  private patient_frequent_sickness?: string | null;
+  private records?: TRecord[];
 
-  constructor({ heart_rate, body_temperature, patient_name, patient_frequent_sickness }: TPayload) {
-    this.heart_rate = new Validator(heart_rate, factory_schema.heart_rate).getValue();
-    this.body_temperature = new Validator(body_temperature, factory_schema.body_temperature).getValue();
-    this.patient_name = new Validator(patient_name, factory_schema.patient_name).getValue();
+  constructor({ patient_name, records }: TPayload) {
+    this.patient_name = new Validator(patient_name, patient_schema.patient_name).getValue();
     this.patient_id = v4();
-    patient_frequent_sickness &&
-      (this.patient_frequent_sickness = new Validator(patient_frequent_sickness, factory_schema.patient_frequent_sickness).getValue());
+    this.records = records?.map((record) => new FRecord(record).getData());
   }
 
   public getData(): TPayload {
     return {
-      heart_rate: this.heart_rate,
-      body_temperature: this.body_temperature,
       patient_name: this.patient_name,
       patient_id: this.patient_id,
-      patient_frequent_sickness: this.patient_frequent_sickness || null,
+      records: this.records,
     };
   }
 }

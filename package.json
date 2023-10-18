@@ -24,7 +24,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/israelmanzi/HealthTrackPro"
+    "url": "git+https://https://github.com/israelmanzi/fictional-doodle"
   },
   "devDependencies": {
     "@prisma/client": "^5.4.2",

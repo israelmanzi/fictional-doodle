@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { TPayload } from '../models/factory/types';
 import { ElementNotFoundError } from '../utils/res';
-import FPatient from '../models/factory';
+import FPatient, { FRecord } from '../models/factory';
+import { TPayload, TRecord } from '../models/types';
 
 export default class PatientService {
   private readonly prismaService: PrismaClient;
@@ -42,11 +42,8 @@ export default class PatientService {
 
     const cPatient = (await this.prismaService.patient.create({
       data: {
-        body_temperature: patient.getData().body_temperature,
-        heart_rate: patient.getData().heart_rate,
         patient_name: patient.getData().patient_name,
         patient_id: patient.getData().patient_id!,
-        patient_frequent_sickness: patient.getData().patient_frequent_sickness,
       },
     })) as TPayload;
 
@@ -63,10 +60,7 @@ export default class PatientService {
         patient_id,
       },
       data: {
-        body_temperature: patient.getData().body_temperature,
-        heart_rate: patient.getData().heart_rate,
         patient_name: patient.getData().patient_name,
-        patient_frequent_sickness: patient.getData().patient_frequent_sickness,
       },
     })) as TPayload;
 
@@ -89,5 +83,49 @@ export default class PatientService {
     return {
       message: `Patient with id ${id} deleted!`,
     };
+  }
+
+  async getPatientWithRecords(id: string): Promise<unknown> {
+    const patientWithRecords = await this.prismaService.patient.findUnique({
+      where: {
+        patient_id: id,
+      },
+      include: {
+        records: {
+          orderBy: {
+            created_at: 'desc',
+          },
+        },
+      },
+    });
+
+    if (!patientWithRecords || patientWithRecords.records.length == 0 || !patientWithRecords.records)
+      throw new ElementNotFoundError(`Patient with id ${id} not found or has no records!`);
+
+    return patientWithRecords;
+  }
+
+  async recordForPatient(id: string, record: TRecord): Promise<unknown> {
+    const fRecord = new FRecord(record);
+
+    const patientWithAddedRecord = await this.prismaService.patient.update({
+      where: {
+        patient_id: id,
+      },
+      data: {
+        records: {
+          create: {
+            body_temperature: fRecord.getData().body_temperature,
+            heart_rate: fRecord.getData().heart_rate,
+            patient_frequent_sickness: fRecord.getData().patient_frequent_sickness,
+            record_id: fRecord.getData().record_id!,
+          },
+        },
+      },
+    });
+
+    if (!patientWithAddedRecord) throw new ElementNotFoundError(`Patient with id ${id} not found!`);
+
+    return patientWithAddedRecord;
   }
 }
