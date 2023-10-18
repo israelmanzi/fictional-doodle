@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { parseError } from '.';
 
 export class InvalidElementError extends Error {
   constructor(message: string) {
@@ -60,19 +61,19 @@ export default (callback: (req: Request, res: Response) => Promise<void>) => asy
   } catch (error: any) {
     switch (error.constructor) {
       case InvalidElementError:
-        res.status(400).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
+        res.status(400).send({ error: parseError(error.message) });
         break;
       case ElementNotFoundError:
-        res.status(404).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
+        res.status(404).send({ error: parseError(error.message) });
         break;
       case InvalidPayloadError:
-        res.status(400).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
+        res.status(400).send({ error: parseError(error.message) });
         break;
       case UnauthorizedError:
-        res.status(401).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
+        res.status(401).send({ error: parseError(error.message) });
         break;
       default:
-        res.status(500).json({ error: typeof error.message === 'string' ? error.message : JSON.parse(error.message) });
+        res.status(500).send({ error: parseError(error.message) });
         break;
     }
   }

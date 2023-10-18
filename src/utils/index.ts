@@ -36,3 +36,7 @@ export const logger = winston.createLogger({
     }),
   ],
 });
+
+export const parseError = (error: string): string => {
+  return typeof error === 'string' ? error : JSON.parse(error);
+};

@@ -16,7 +16,6 @@ CREATE TABLE "Record" (
     "patient_frequent_sickness" TEXT,
     "patient_id" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL,
     CONSTRAINT "Record_patient_id_fkey" FOREIGN KEY ("patient_id") REFERENCES "Patient" ("patient_id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 

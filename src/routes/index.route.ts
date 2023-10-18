@@ -10,13 +10,12 @@ router
   .get('/patients', errorHandler(patientController.getPatients))
   .get('/patients/:id', errorHandler(patientController.getPatientById))
   .post('/patients', errorHandler(patientController.createPatient))
-  .put('/patients/:id', errorHandler(patientController.updatePatient))
+  .patch('/patients/:id', errorHandler(patientController.updatePatient))
   .delete('/patients/:id', errorHandler(patientController.deletePatient))
   .get('/patients/:id/records', errorHandler(patientController.getPatientWithRecords))
   .post('/patients/:id/records', errorHandler(patientController.newRecordForPatient))
   .get('/records/:patient_id', errorHandler(recordController.getRecordByPatient))
   .get('/records', errorHandler(recordController.getRecords))
-  .post('/records', errorHandler(recordController.createRecord))
   .delete('/records/:record_id', errorHandler(recordController.deleteRecord));
 
 export default router;

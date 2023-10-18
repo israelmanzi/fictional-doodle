@@ -19,12 +19,6 @@ const recordController = {
     new TResponse(200, record).send(res);
   },
 
-  createRecord: async (req: Request, res: Response) => {
-    const record = await recordService.createRecord(req.body);
-
-    new TResponse(200, record).send(res);
-  },
-
   deleteRecord: async (req: Request, res: Response) => {
     const { record_id } = req.params;
 

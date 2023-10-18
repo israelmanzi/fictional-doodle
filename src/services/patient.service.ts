@@ -99,14 +99,24 @@ export default class PatientService {
       },
     });
 
-    if (!patientWithRecords || patientWithRecords.records.length == 0 || !patientWithRecords.records)
-      throw new ElementNotFoundError(`Patient with id ${id} not found or has no records!`);
+    if (!patientWithRecords) throw new ElementNotFoundError(`Patient with id ${id} not found`);
 
     return patientWithRecords;
   }
 
-  async recordForPatient(id: string, record: TRecord): Promise<unknown> {
-    const fRecord = new FRecord(record);
+  async recordForPatient(id: string, record: Omit<TRecord, 'patient_id'>): Promise<unknown> {
+    const fRecord = new FRecord({
+      ...record,
+      patient_id: id,
+    });
+
+    const designatedPatient = await this.prismaService.patient.findUnique({
+      where: {
+        patient_id: id,
+      },
+    });
+
+    if (!designatedPatient) throw new ElementNotFoundError(`Patient with id ${id} not found!`);
 
     const patientWithAddedRecord = await this.prismaService.patient.update({
       where: {
@@ -122,9 +132,16 @@ export default class PatientService {
           },
         },
       },
+      include: {
+        records: {
+          orderBy: {
+            created_at: 'desc',
+          },
+        },
+      },
     });
 
-    if (!patientWithAddedRecord) throw new ElementNotFoundError(`Patient with id ${id} not found!`);
+    if (!patientWithAddedRecord) throw new Error(`Adding record for patient with id ${id} failed!`);
 
     return patientWithAddedRecord;
   }

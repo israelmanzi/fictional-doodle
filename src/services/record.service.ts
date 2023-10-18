@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { ElementNotFoundError, InvalidElementError } from '../utils/res';
+import { ElementNotFoundError } from '../utils/res';
 import { TRecord } from '../models/types';
-import { FRecord } from '../models/factory';
 
 export default class RecordService {
   private readonly prismaService: PrismaClient;
@@ -32,31 +31,9 @@ export default class RecordService {
       },
     })) as TRecord[];
 
-    if (!dRecord) throw new ElementNotFoundError(`Record with patient id ${patient_id} not found!`);
+    if (!dRecord || dRecord.length === 0) throw new ElementNotFoundError(`No records registered on patient with patient id ${patient_id} found!`);
 
     return dRecord;
-  }
-
-  async createRecord(payload: TRecord): Promise<TRecord> {
-    const record = new FRecord(payload);
-
-    const cRecord = (await this.prismaService.record.create({
-      data: {
-        Patient: {
-          connect: {
-            patient_id: record.getData().patient_id!,
-          },
-        },
-        body_temperature: record.getData().body_temperature,
-        heart_rate: record.getData().heart_rate,
-        record_id: record.getData().record_id!,
-        patient_frequent_sickness: record.getData().patient_frequent_sickness,
-      },
-    })) as TRecord;
-
-    if (!cRecord) throw new InvalidElementError(`Patient with id ${record.getData().patient_id} not found!`);
-
-    return cRecord;
   }
 
   async deleteRecord(record_id: string): Promise<{

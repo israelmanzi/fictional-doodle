@@ -28,5 +28,4 @@ model Record {
   Patient                   Patient? @relation(fields: [patient_id], references: [patient_id])
   patient_id                String
   created_at                DateTime @default(now())
-  updated_at                DateTime @updatedAt
 }
