@@ -1,7 +1,7 @@
 export interface TPayload {
   patient_id?: string;
   patient_name: string;
-  records?: TRecord[];
+  records?: TRecord[] | null;
 }
 
 export interface TRecord {

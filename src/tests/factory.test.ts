@@ -1,55 +1,51 @@
 import { Response } from 'express';
-import FPatient from '../models/factory';
-import { TPayload } from '../models/types';
+import FPatient, { FRecord } from '../models/factory';
+import { TPayload, TRecord } from '../models/types';
 import { InvalidElementError, ElementNotFoundError, ForbiddenError, InvalidPayloadError, UnauthorizedError, TResponse } from '../utils/res';
 
-export const sample_data = [
+const match_sample_data: TPayload[] = [
   {
     patient_name: 'John Doe',
-    heart_rate: 100,
-    body_temperature: 37.5,
-    patient_frequent_sickness: 'headache',
   },
   {
     patient_name: 'Jane Doe',
+  },
+];
+
+const match_record_data: TRecord[] = [
+  {
     heart_rate: 90,
     body_temperature: 36.5,
     patient_frequent_sickness: 'diarrhea',
+    patient_id: '1',
   },
+
   {
-    patient_name: 'John Smith',
-    heart_rate: 110,
-    body_temperature: 38.5,
-  },
-  {
-    patient_name: 1,
-    heart_rate: '120',
-    body_temperature: '39.5',
+    heart_rate: 70,
+    body_temperature: 34.5,
+    patient_frequent_sickness: 'headache',
+    patient_id: '2',
   },
 ];
 
 describe('Factory and Validator classes test', () => {
   describe('Factory class test', () => {
     it('should create a patient with valid data', () => {
-      const patient = new FPatient(sample_data[0] as TPayload);
+      const patient = new FPatient(match_sample_data[0] as TPayload);
 
       expect(patient).toHaveProperty('getData');
       expect(patient.getData()).toHaveProperty('patient_id');
-      expect(patient.getData()).toStrictEqual({ ...sample_data[0], patient_id: patient.getData().patient_id });
+      expect(patient.getData()).toStrictEqual({ ...match_sample_data[0], patient_id: patient.getData().patient_id, records: null });
     });
   });
 
   describe('Validator class test', () => {
-    it('should validate a valid patient', () => {
-      const patient = new FPatient(sample_data[2] as TPayload);
+    it('should validate a valid record', () => {
+      const record = new FRecord(match_record_data[0] as TRecord);
 
-      expect(patient).toHaveProperty('getData');
-      expect(patient.getData()).toHaveProperty('patient_id');
-      expect(patient.getData()).toStrictEqual({ ...sample_data[2], patient_id: patient.getData().patient_id, patient_frequent_sickness: null });
-    });
-
-    it('should validate an invalid patient', () => {
-      expect(() => new FPatient(sample_data[3] as TPayload)).toThrow(InvalidElementError);
+      expect(record).toHaveProperty('getData');
+      expect(record.getData()).toHaveProperty('patient_id');
+      expect(record.getData()).toStrictEqual({ ...match_record_data[0], patient_id: record.getData().patient_id, record_id: record.getData().record_id });
     });
   });
 

@@ -60,12 +60,12 @@ export class FRecord {
 export default class FPatient {
   private patient_name: string;
   private patient_id: string;
-  private records?: TRecord[];
+  private records?: TRecord[] | null;
 
   constructor({ patient_name, records }: TPayload) {
     this.patient_name = new Validator(patient_name, patient_schema.patient_name).getValue();
     this.patient_id = v4();
-    this.records = records?.map((record) => new FRecord(record).getData());
+    this.records = records?.map((record) => new FRecord(record).getData()) || null;
   }
 
   public getData(): TPayload {
